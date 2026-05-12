@@ -1,25 +1,32 @@
-await Canvas();
+await Canvas(); 
 world.gravity.y = 10;
 
-let ball = new Sprite();
-ball.diameter = 50;
-ball.img = '🤪';
+let cruiser = new Sprite();
+cruiser.diameter = 32;
+cruiser.img = '🤪';
+cruiser.x = width / 2;
+cruiser.y = height / 2;
 
-let groundA = new Sprite();
-groundA.x = -120;
-groundA.width = 220;
-groundA.rotation = 30;
-groundA.physics = STATIC;
+let ground = new Sprite();
+ground.x = width / 2;
+ground.y = height - 50;
+ground.width = width * 10;
+ground.height = 100;
+ground.physics = 'static';
 
-let groundB = new Sprite();
-groundB.x = 120;
-groundB.width = 220;
-groundB.rotation = -30;
-groundB.physics = STATIC;
+q5.draw = function () {
+    background('skyblue'); // Clears the black screen
+    
+    // Constant movement
+    cruiser.vel.x = 5;
 
-q5.update = function () {
-	background('skyblue');
-	text('click to jump!', 0, -50);
+    if (mouse.presses()) {
+        cruiser.vel.y = -8;
+    }
 
-	if (mouse.presses()) ball.vel.y = -5;
+    // Follow the cruiser
+    camera.x = cruiser.x;
+    
+    // UI text must follow the camera or be drawn after camera.off()
+    text('click to jump!', cruiser.x, cruiser.y - 50); 
 };
