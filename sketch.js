@@ -1,5 +1,5 @@
 await Canvas(); 
-world.gravity.y = 10;
+world.gravity.y = 20;
 
 let cruiser = new Sprite();
 cruiser.diameter = 32;
@@ -21,7 +21,7 @@ q5.draw = function () {
     cruiser.vel.x = 5;
 
     if (mouse.presses()) {
-        cruiser.vel.y = -8;
+        cruiser.vel.y = -3;
     }
 
     // Follow the cruiser
