@@ -1,32 +1,51 @@
+
+
 await Canvas(); 
-world.gravity.y = 20;
+
+
+world.gravity.y = 15;
 
 let cruiser = new Sprite();
 cruiser.diameter = 32;
-cruiser.img = '🤪';
-cruiser.x = width / 2;
-cruiser.y = height / 2;
+cruiser.img = '🍪';
+cruiser.x = 0;
+cruiser.y = 0;
 
-let ground = new Sprite();
-ground.x = width / 2;
-ground.y = height - 50;
-ground.width = width * 10;
-ground.height = 100;
-ground.physics = 'static';
+let ground_bottom = new Sprite();
+ground_bottom.x = 0;
+ground_bottom.y = height/2;
+ground_bottom.width = width * 10000;
+ground_bottom.height = 100;
+ground_bottom.physics = 'static';
+ground_bottom.color = 'tan';
+
+let ground_top = new Sprite();
+ground_top.x = 0;
+ground_top.y = -height/2;
+ground_top.width = width * 10000;
+ground_top.height = 100;
+ground_top.physics = 'static';
+ground_top.color = 'tan';
 
 q5.draw = function () {
-    background('skyblue'); // Clears the black screen
+    background('skyblue');
     
     // Constant movement
     cruiser.vel.x = 5;
 
-    if (mouse.presses()) {
-        cruiser.vel.y = -3;
+    if (mouse.pressing() || kb.pressing('space')) {
+        cruiser.vel.y = -5;
     }
-
+    /*
+    // Keep sprite on screen (top and bottom bounds)
+    if (cruiser.y < -height/2) cruiser.y = -height/2;
+    if (cruiser.y > height/2) cruiser.y = height/2;
+    */
     // Follow the cruiser
-    camera.x = cruiser.x;
+    camera.x = cruiser.x
     
-    // UI text must follow the camera or be drawn after camera.off()
-    text('click to jump!', cruiser.x, cruiser.y - 50); 
+    camera.off();
+    fill('black'); // Add text color so it's visible
+    text('click to jump!', 0, 30);
+    camera.on();
 };
