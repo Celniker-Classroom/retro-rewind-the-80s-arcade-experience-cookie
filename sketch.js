@@ -46,6 +46,13 @@ q5.draw = function () {
     
     camera.off();
     fill('black'); // Add text color so it's visible
+
     text('click to jump!', 0, 30);
+    updateTimer();
     camera.on();
 };
+function updateTimer(){
+    let secs = String(new Date().getSeconds()).padStart(2, '0');
+    text(secs, -width/2 + 100, -height/2 + 100);
+};
+
