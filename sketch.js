@@ -1,9 +1,11 @@
-
-
 await Canvas(); 
 
-
 world.gravity.y = 15;
+
+// Game state variables
+let gameActive = true;
+let startTime = null;
+let elapsedSeconds = 0;
 
 let cruiser = new Sprite();
 cruiser.diameter = 32;
@@ -29,30 +31,48 @@ ground_top.color = 'tan';
 
 q5.draw = function () {
     background('skyblue');
-    
-    // Constant movement
-    cruiser.vel.x = 5;
+    if (gameActive){
+        // Constant movement
+        cruiser.vel.x = 5;
 
-    if (mouse.pressing() || kb.pressing('space')) {
-        cruiser.vel.y = -5;
+        if (mouse.pressing() || kb.pressing('space')) {
+            cruiser.vel.y = -5;
+        }
+
+        // Keep sprite on screen (top and bottom bounds)
+        if (cruiser.y < -height/2) cruiser.y = -height/2;
+        if (cruiser.y > height/2) cruiser.y = height/2;
+        
+        // Timer
+        if (startTime === null) startTime = Date.now() / 1000;
+        let now = Date.now() / 1000;
+        elapsedSeconds = now - startTime;
     }
-    /*
-    // Keep sprite on screen (top and bottom bounds)
-    if (cruiser.y < -height/2) cruiser.y = -height/2;
-    if (cruiser.y > height/2) cruiser.y = height/2;
-    */
+    
     // Follow the cruiser
     camera.x = cruiser.x
     
     camera.off();
     fill('black'); // Add text color so it's visible
-
+    textSize(20);
     text('click to jump!', 0, 30);
-    updateTimer();
+
+    // show stats
+    text('SCORE: ' + elapsedSeconds.toFixed(1) * 10, -width/2 + 100, -height/2 + 80)
+    
     camera.on();
 };
-function updateTimer(){
-    let secs = String(new Date().getSeconds()).padStart(2, '0');
-    text(secs, -width/2 + 100, -height/2 + 100);
+function restartGame(){
+    startTime = Date.now() / 1000;
+    elapsedSeconds = 0;
+    cruiser.x = 0;
+    cruiser.y = 0;
+    cruiser.vel.y = 0;
 };
 
+// Press 'R' to restart the stopwatch and score
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'r' || e.key === 'R') {
+        restartGame();
+    }
+});
