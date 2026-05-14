@@ -29,6 +29,10 @@ ground_top.height = 100;
 ground_top.physics = 'static';
 ground_top.color = 'tan';
 
+// Coins
+let coins = [];
+let coinCounter = 0;
+const COIN_SPAWN_DELAY = 45;
 q5.draw = function () {
     background('skyblue');
     if (gameActive){
@@ -48,12 +52,35 @@ q5.draw = function () {
         let now = Date.now() / 1000;
         elapsedSeconds = now - startTime;
     }
-    
+    coinCounter++;
+        if (coinCounter >= COIN_SPAWN_DELAY) {
+            coinCounter = 0;
+            spawnCoin();
+        }
+
+        // Update coins: move them and check collision with cruiser
+        for (let i = 0; i < coins.length; i++) {
+            let c = coins[i];
+            // Remove if off screen left
+            if (c.x < camera.x - width/2 - 50) {
+                c.remove();
+                coins.splice(i, 1);
+                i--;
+                continue;
+            }
+            // Collision with cruiser
+            if (cruiser.overlap(c)) {
+                c.remove();
+                coins.splice(i, 1);
+                elapsedSeconds += 10;    // coin adds 100 points
+                i--;
+            }
+        }
     // Follow the cruiser
     camera.x = cruiser.x
     
     camera.off();
-    fill('black'); // Add text color so it's visible
+    fill('black');
     textSize(20);
     text('click to jump!', 0, 30);
 
@@ -65,12 +92,25 @@ q5.draw = function () {
 function restartGame(){
     startTime = Date.now() / 1000;
     elapsedSeconds = 0;
+    for (let c of coins) c.remove();
+    coins = [];
+    coinCounter = 0;
     cruiser.x = 0;
     cruiser.y = 0;
     cruiser.vel.y = 0;
 };
+function spawnCoin(){
+    let coin = new Sprite();
+    coin.diameter = 20;
+    coin.img = '💰';
+    coin.x = camera.x + width/2 + 50;   // right edge of screen
+    coin.y = random(-height/2 + 40, height/2 - 40);
+    coin.vel.x = 0;
+    coin.physics = 'static';
+    coins.push(coin);
+};
 
-// Press 'R' to restart the stopwatch and score
+// Press "r" to restart the timer
 window.addEventListener('keydown', (e) => {
     if (e.key === 'r' || e.key === 'R') {
         restartGame();
